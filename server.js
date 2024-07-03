@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-// Connexion à la base de données MongoDB
+// Connexion
 mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -17,6 +17,10 @@ mongoose.connect(process.env.DB_URI, {
   console.log('Connected to MongoDB');
 }).catch(err => {
   console.error('Error connecting to MongoDB', err);
+});
+
+app.get('/', (req, res) => {
+  res.send('Bienvenue sur le serveur!');
 });
 
 app.use(cors());
