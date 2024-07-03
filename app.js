@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,43 +6,42 @@ const cors = require('cors');
 const app = express();
 const PORT = 5000;
 
-
+// Connexion à la base de données MongoDB
 mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.error('Error connecting to MongoDB', err);
 });
 
+// Définir le schéma pour les documents de localisation
 const LocationSchema = new mongoose.Schema({
   latitude: Number,
   longitude: Number,
   timestamp: { type: Date, default: Date.now }
 });
 
+// Créer un modèle basé sur le schéma
 const Location = mongoose.model('Location', LocationSchema);
 
 app.use(cors());
 app.use(express.json());
 
-app.post('/locations', async (req, res) => {
-  const { latitude, longitude } = req.body;
-  const newLocation = new Location({ latitude, longitude });
-  await newLocation.save();
-  res.status(201).send(newLocation);
+// Route pour récupérer toutes les localisations
+app.get('/locations', async (req, res) => {
+  try {
+    const locations = await Location.find();
+    res.status(200).send(locations);
+  } catch (error) {
+    res.status(500).send({ message: 'Error retrieving locations', error });
+  }
 });
 
-// app.get('/locations', async (req, res) => {
-//   const locations = await Location.find();
-//   res.status(200).send(locations);
-// });
-
-app.get('/', (req, res) => {
-    res.send('Welcome to the Geo Tracker API');
-  });
-
-  app.get('/hello', (req, res)=>{
-    res.set('Content-Type', 'text/html');
-    res.status(200).send("<h1>Hello GFG Learner!</h1>");
+app.listen(PORT, (error) => {
+  if (!error)
+    console.log("Server is Successfully Running, and App is listening on port " + PORT)
+  else
+    console.log("Error occurred, server can't start", error);
 });
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
