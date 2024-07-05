@@ -20,3 +20,18 @@ export const getAllLocations = async (req, res) => {
     res.status(500).send("Error retrieving locations");
   }
 };
+
+export const deleteLocation = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedLocation = await Location.findByIdAndDelete(id);
+    if (!deletedLocation) {
+      return res.status(404).send("Location not found");
+    }
+    res.status(200).send("Location deleted successfully");
+  } catch (error) {
+    console.error("Error deleting location:", error);
+    res.status(500).send("Error deleting location");
+  }
+};
+
