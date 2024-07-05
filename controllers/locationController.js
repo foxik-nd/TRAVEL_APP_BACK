@@ -1,9 +1,9 @@
 import Location from '../models/locationModel.js';
 
 export const addLocation = async (req, res) => {
-  const { latitude, longitude, image } = req.body;
+  const { latitude, longitude, image, description } = req.body; 
   try {
-    const newLocation = new Location({ latitude, longitude, image });
+    const newLocation = new Location({ latitude, longitude, image, description }); 
     await newLocation.save();
     res.status(201).send(newLocation);
   } catch (error) {
@@ -34,4 +34,3 @@ export const deleteLocation = async (req, res) => {
     res.status(500).send("Error deleting location");
   }
 };
-

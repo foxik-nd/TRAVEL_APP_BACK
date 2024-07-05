@@ -4,6 +4,7 @@ const locationSchema = mongoose.Schema({
   latitude: Number,
   longitude: Number,
   imagePath: String,
+  description: String,
   timestamp: { type: Date, default: Date.now }
 });
 
